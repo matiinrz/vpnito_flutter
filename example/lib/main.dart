@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_v2ray/flutter_v2ray.dart';
+import 'package:flutter_v2ray_example/screen/home/home_page.dart';
+import 'package:flutter_v2ray_example/utils/custom_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,22 +12,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter V2Ray',
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(),
-        ),
-      ),
-      home: const Scaffold(
+      debugShowCheckedModeBanner: false,
+      title: 'VPNITO',
+      theme: customLightTheme(context),
+      darkTheme: customDarkTheme(context),
+      themeMode: ThemeMode.light,
+      home: HomePage(),
+      /*home: const Scaffold(
         body: HomePage(),
-      ),
+      ),*/
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+/*class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
@@ -276,4 +274,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
+}*/
