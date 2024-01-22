@@ -22,6 +22,8 @@ dependencies:
   flutter_vpn: ^0.12.0
   roundcheckbox: ^2.0.5
   get: ^4.6.6
+  dio:
+
 
   flutter_v2ray:
     # When depending on this package from a real application you should use:
