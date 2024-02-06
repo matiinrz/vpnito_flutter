@@ -12,10 +12,10 @@ import '../servers/server_list_page.dart';
 
 class HomeController extends GetxController{
 
-  late Stream<String> _durationStream;
+  late Stream<String> durationStream;
   CharonErrorState charonState = CharonErrorState.NO_ERROR;
   Server? server;
-  String connectionTime = '00.00.00';
+  RxString connectionTime = '00.00.00'.obs;
 
   late final FlutterV2ray flutterV2ray = FlutterV2ray(
     onStatusChanged: (status) {
@@ -24,8 +24,9 @@ class HomeController extends GetxController{
   );
 
   @override
-  void onInit() {
-    _durationStream = vpnConnectionDuration();
+  void onInit() async{
+    super.onInit();
+    durationStream = vpnConnectionDuration();
     flutterV2ray.initializeV2Ray().then((value) async {
       coreVersion = await flutterV2ray.getCoreVersion();
     });
@@ -49,8 +50,8 @@ class HomeController extends GetxController{
         bypassSubnets: bypassSubnets,
       );
     } else {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+      if (Get.context!.mounted) {
+        ScaffoldMessenger.of(Get.context!).showSnackBar(
           const SnackBar(
             content: Text('Permission Denied'),
           ),
@@ -66,8 +67,8 @@ class HomeController extends GetxController{
         final V2RayURL v2rayURL = FlutterV2ray.parseFromURL(link);
         remark = v2rayURL.remark;
         config.text = v2rayURL.getFullConfiguration();
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+        if (Get.context!.mounted) {
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
             const SnackBar(
               content: Text(
                 'Success',
@@ -76,8 +77,8 @@ class HomeController extends GetxController{
           );
         }
       } catch (error) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+        if (Get.context!.mounted) {
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
             SnackBar(
               content: Text(
                 'Error: $error',
@@ -96,8 +97,8 @@ class HomeController extends GetxController{
     } else {
       delay = await flutterV2ray.getServerDelay(config: config.text);
     }
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
+    if (!Get.context!.mounted) return;
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
         content: Text(
           '${delay}ms',
@@ -109,8 +110,9 @@ class HomeController extends GetxController{
   void bypassSubnet() {
     bypassSubnetController.text = bypassSubnets.join("\n");
     Utils.showDialog( 'Subnets:', TextStyle(fontSize: 16.0));
+
     showDialog(
-      context: context,
+      context: Get.context!,
       builder: (context) => Dialog(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
