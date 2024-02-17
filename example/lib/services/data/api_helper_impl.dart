@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:flutter_v2ray_example/services/data/storage.dart';
 import 'package:get/get.dart';
-import '../auth_service.dart';
 import '../constants.dart';
-import 'api_helper.dart';
 
 
 class ApiHelperImpl extends GetConnect{
