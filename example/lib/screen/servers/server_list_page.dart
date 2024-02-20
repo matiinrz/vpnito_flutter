@@ -1,9 +1,9 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_v2ray_example/screen/servers/server_item_widget.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
-import '../../widgets/server_list_widget.dart';
 
 class ServerListPage extends StatefulWidget {
   @override

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class ServerItemWidget extends StatelessWidget {
   const ServerItemWidget(
       {Key? key,
-      required this.label,
-      required this.icon,
-      required this.flagAsset,
-      required this.onTap,
-      this.isFaded = false})
+        required this.label,
+        required this.icon,
+        required this.flagAsset,
+        required this.onTap,
+        this.isFaded = false})
       : super(key: key);
 
   final String label;

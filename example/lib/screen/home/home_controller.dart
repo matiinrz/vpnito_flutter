@@ -1,21 +1,25 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_v2ray/flutter_v2ray.dart';
-import 'package:flutter_v2ray_example/utils/utils.dart';
 import 'package:flutter_vpn/flutter_vpn.dart';
 import 'package:flutter_vpn/state.dart';
 import 'package:get/get.dart';
-
 import '../servers/server_list_page.dart';
+import 'package:http/http.dart' as http;
+
+
 
 class HomeController extends GetxController{
+
+
 
   late Stream<String> durationStream;
   CharonErrorState charonState = CharonErrorState.NO_ERROR;
   Server? server;
   RxString connectionTime = '00.00.00'.obs;
+  RxList configs = [].obs;
 
   late final FlutterV2ray flutterV2ray = FlutterV2ray(
     onStatusChanged: (status) {
@@ -26,6 +30,8 @@ class HomeController extends GetxController{
   @override
   void onInit() async{
     super.onInit();
+    fetchData();
+    print("oninit");
     durationStream = vpnConnectionDuration();
     flutterV2ray.initializeV2Ray().then((value) async {
       coreVersion = await flutterV2ray.getCoreVersion();
@@ -40,6 +46,43 @@ class HomeController extends GetxController{
   String? coreVersion;
 
   String remark = "Default Remark";
+
+  Future<void> fetchData() async {
+    const String apiUrl = 'http://mortred.snapplr.top/api/configs';
+    print("Start fetching data");
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        print(jsonData);
+
+      } else {
+        print('Error1: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error2: $error');
+    }
+  }
+
+  /*Future<void> fetchData() async {
+    const String apiUrl = 'http://mortred.snapplr.top/api/configs';
+    print("Start fetching data");
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        print(jsonData);
+
+      } else {
+        print('Error1: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error2: $error');
+    }
+  }*/
+
 
   void connect() async {
     if (await flutterV2ray.requestPermission()) {
@@ -109,7 +152,6 @@ class HomeController extends GetxController{
 
   void bypassSubnet() {
     bypassSubnetController.text = bypassSubnets.join("\n");
-    Utils.showDialog( 'Subnets:', TextStyle(fontSize: 16.0));
 
     showDialog(
       context: Get.context!,

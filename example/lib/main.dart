@@ -1,13 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_v2ray_example/routes/app_pages.dart';
 import 'package:flutter_v2ray_example/screen/home/home_page.dart';
-import 'package:flutter_v2ray_example/utils/custom_theme.dart';
-import 'package:flutter_v2ray_example/utils/initializer.dart';
-import 'package:flutter_v2ray_example/widgets/base_widget.dart';
 import 'package:get/get.dart';
 
+import 'bindings/bindings.dart';
+
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -17,28 +17,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      // theme: AppTheme.theme,
-      theme: customLightTheme(context),
-      debugShowCheckedModeBanner: false,
+      initialBinding: MyBindings(),
       title: 'VPNITO',
-      initialBinding: InitialBindings(),
-      initialRoute: '/home',
-      getPages: AppPages().routes,
-      builder: (_, mainChild) => SafeArea(
-        child: MediaQuery(
-            data: MediaQueryData(size: Size(Get.width, Get.height)),
-            child: ScreenUtilInit(
-              designSize: const Size(360, 690),
-              minTextAdapt: true,
-              splitScreenMode: true,
-              builder: ((context, screenChild) {
-                return BaseWidget(
-                  child: screenChild ?? const SizedBox.shrink(),
-                );
-              }),
-              child: mainChild,
-            )),
-      ),
+      debugShowCheckedModeBanner: false,
+      home: const HomePage(),
     );
     /*MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -50,6 +32,15 @@ class MyApp extends StatelessWidget {
         body: HomePage(),
       ),*//*
     );*/
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
