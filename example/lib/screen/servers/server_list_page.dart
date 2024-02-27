@@ -41,44 +41,56 @@ class ServerListPage extends GetView<ServerController>{
                   itemCount: controller.configs.length,
                   itemBuilder: (_, index) {
                     return Container(
-
                       margin: EdgeInsets.symmetric(vertical: 5.0),
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black54,width: 1.0),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(7.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  radius: 15,
-                                  backgroundColor: Colors.white,
-                                  backgroundImage: AssetImage(
-                                    "./assets/${controller.configs[index].flag}.png"  ,
+                      child: InkWell(
+                        onTap: (){
+
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(7.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 15,
+                                    backgroundColor: Colors.white,
+                                    backgroundImage: AssetImage(
+                                      "./assets/${controller.configs[index].flag}.png"  ,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Text(
-                                  controller.configs[index].name! ?? '',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ],
-                            ),
-                            RoundCheckBox(
-                              size: 24,
-                              checkedWidget: const Icon(Icons.check, size: 18, color: Colors.white),
-                              onTap: (x) {
-                                controller.selectedConfig = controller.configs[index];
-                              },
-                            ),
-                          ],
+                                  const SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text(
+                                    controller.configs[index].name! ?? '',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                  const SizedBox(
+                                    width: 15,
+                                  ),
+
+                                  controller.configs[index].ping == null ?
+                                  Text(
+                                    'Pinging ...',
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                  ):
+                                  Text(
+                                    controller.configs[index].ping.toString() ,
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ],
+                              ),
+
+                            ],
+                          ),
                         ),
                       ),
                     );
