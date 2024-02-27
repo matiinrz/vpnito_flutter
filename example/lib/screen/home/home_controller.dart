@@ -3,18 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_v2ray/flutter_v2ray.dart';
+import 'package:flutter_v2ray_example/models/server_model.dart';
+import 'package:flutter_v2ray_example/screen/servers/server_controller.dart';
+import 'package:flutter_v2ray_example/services/data_service.dart';
 import 'package:flutter_vpn/flutter_vpn.dart';
 import 'package:flutter_vpn/state.dart';
 import 'package:get/get.dart';
 import '../servers/server_list_page.dart';
-import 'package:http/http.dart' as http;
 
-
-
-class HomeController extends GetxController{
-
-
-
+class HomeController extends GetxController {
   late Stream<String> durationStream;
   CharonErrorState charonState = CharonErrorState.NO_ERROR;
   Server? server;
@@ -28,7 +25,7 @@ class HomeController extends GetxController{
   );
 
   @override
-  void onInit() async{
+  void onInit() async {
     super.onInit();
     fetchData();
     print("oninit");
@@ -37,6 +34,16 @@ class HomeController extends GetxController{
       coreVersion = await flutterV2ray.getCoreVersion();
     });
   }
+  @override
+  void onReady() async {
+    super.onReady();
+    Future.delayed(Duration(seconds: 3),() {
+      print("Controller Configs${_serverController.configs}");
+    },);
+
+
+  }
+
 
   final config = TextEditingController();
   bool proxyOnly = false;
@@ -47,22 +54,12 @@ class HomeController extends GetxController{
 
   String remark = "Default Remark";
 
+  final _serverController = Get.put(ServerController());
+
   Future<void> fetchData() async {
-    const String apiUrl = 'http://mortred.snapplr.top/api/configs';
-    print("Start fetching data");
-    try {
-      final response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        print(jsonData);
-
-      } else {
-        print('Error1: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error2: $error');
-    }
+    // _serverController.setConfigs(await DataServices().getConfigs());
+    _serverController.configs.value = await DataServices().getConfigs();
+    _serverController.refresh();
   }
 
   /*Future<void> fetchData() async {
@@ -83,7 +80,6 @@ class HomeController extends GetxController{
     }
   }*/
 
-
   void connect() async {
     if (await flutterV2ray.requestPermission()) {
       flutterV2ray.startV2Ray(
@@ -102,6 +98,7 @@ class HomeController extends GetxController{
       }
     }
   }
+
   void importConfig() async {
     if (await Clipboard.hasStrings()) {
       try {
@@ -226,6 +223,7 @@ class HomeController extends GetxController{
         return 'Disconnected';
     }
   }
+
   Color connectionColorState({FlutterVpnState? state}) {
     switch (state) {
       case FlutterVpnState.connected:
@@ -280,7 +278,4 @@ class HomeController extends GetxController{
       yield formattedDuration;
     });
   }
-
-
-
 }

@@ -58,14 +58,13 @@ class HomePage extends GetView<HomeController> {
                       padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
                       child: Column(
                         children: [
-                          Text(controller.connectionTime.toString(),style: Theme.of(context).textTheme.bodyLarge,),
-                          SizedBox(height: 25),
+                          const SizedBox(height: 25),
                           Center(
                               child: Text(
-                                '${controller.connectionState(state: _flutterVpnState)}',
+                                controller.connectionState(state: _flutterVpnState),
                                 style: Theme.of(context).textTheme.bodyLarge,
                               )),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           FutureBuilder<List<NetworkInterface>>(
                               future: NetworkInterface.list(),
                               builder: (context, snapshot) {
@@ -152,6 +151,7 @@ class HomePage extends GetView<HomeController> {
                               ),
                             ),
                           ),
+                          Text(controller.connectionTime.toString(),style: Theme.of(context).textTheme.bodyLarge,),
                           SizedBox(
                             height: 20,
                           ),
