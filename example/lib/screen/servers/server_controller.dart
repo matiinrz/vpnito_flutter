@@ -1,81 +1,13 @@
-
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_v2ray_example/models/config_model.dart';
 import 'package:flutter_v2ray_example/services/data_service.dart';
 import 'package:get/get.dart';
-
-import '../../models/server_model.dart';
+import 'package:flutter_v2ray/flutter_v2ray.dart';
 
 class ServerController extends GetxController {
 
   RxInt? selectedConfig ;
-  final premiumServers = <Server>[
-    Server(
-        name: 'England',
-        flag: 'assets/england.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'United States',
-        flag: 'assets/usa.jpg',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'Canada',
-        flag: 'assets/canada.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'France',
-        flag: 'assets/france.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'Ghana',
-        flag: 'assets/ghana.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-  ];
-  List<Server> freeServers = [
-    Server(
-        name: 'England',
-        flag: 'assets/england.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'France',
-        flag: 'assets/france.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'Ghana',
-        flag: 'assets/ghana.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-  ];
 
   // RxList<ConfigModel> configs = <ConfigModel>[].obs;
 
@@ -113,12 +45,70 @@ class ServerController extends GetxController {
   ].obs;
 
 
+  // V2ray Stuffs
+  String remark = "Default Remark";
+  var v2rayStatus = ValueNotifier<V2RayStatus>(V2RayStatus());
+  String? coreVersion;
+  late final FlutterV2ray flutterV2ray = FlutterV2ray(
+    onStatusChanged: (status) {
+      v2rayStatus.value = status;
+    },
+  );
+
   @override
-  void onInit() async{
+  void onInit() async {
     super.onInit();
-
     // configs.value = await DataServices().getConfigs();
+    flutterV2ray.initializeV2Ray().then((value) async {
+      coreVersion = await flutterV2ray.getCoreVersion();
+    });
+    getConfigsRealDelay();
+  }
 
+  void getConfigsRealDelay() async {
+    debugPrint("Get Config Real Delay Called");
+
+    for (ConfigModel conf in configs) {
+      V2RayURL parser = FlutterV2ray.parseFromURL(conf.config!);
+
+      int delay = await _checkRealDelay(parser.getFullConfiguration());
+      debugPrint("Config Name: ${conf.name!} PING: $delay");
+      conf.ping = delay;
+    }
+    sortConfigsByPing();
+  }
+
+  void sortConfigsByPing() async {
+    debugPrint("Sort Config By Ping");
+    configs.sort((a, b) {
+      if (a.ping == -1 && b.ping == -1) {
+        return 0; // if both have -1, maintain current order
+      } else if (a.ping == -1) {
+        return 1; // move a to the end
+      } else if (b.ping == -1) {
+        return -1; // move b to the end
+      } else {
+        return a.ping!.compareTo(b.ping!); // normal comparison
+      }
+    });
+
+    for (ConfigModel conf in configs) {
+      debugPrint("Config Name: ${conf.name!} PING: ${conf.ping}");
+    }
+  }
+
+  Future<int> _checkRealDelay(String configString) async {
+    late int delay;
+    if (v2rayStatus.value.state == 'CONNECTED') {
+      delay = await flutterV2ray.getConnectedServerDelay();
+    } else {
+      delay = await flutterV2ray.getServerDelay(config: configString);
+    }
+    if (!Get.context!.mounted) {
+      return -1;
+    } else {
+      return delay;
+    }
   }
 
 
