@@ -6,7 +6,96 @@ import 'package:flutter_v2ray_example/screen/servers/server_item_widget.dart';
 import 'package:get/get.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
-class ServerListPage extends StatefulWidget {
+
+
+class ServerListPage extends GetView<ServerController>{
+
+  @override
+  Widget build(BuildContext context) {
+
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        return true;
+      },
+      child: Obx(
+        () {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Servers',
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w600),
+              ),
+            ),
+            body: ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(20),
+              children: [
+                Center(child: Text(controller.configs.isEmpty ? "خالی" : controller.configs.length.toString(),style: TextStyle(color: Colors.black)),),
+                const SizedBox(
+                  height: 20,
+                ),
+
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.configs.length,
+                  itemBuilder: (_, index) {
+                    return Container(
+
+                      margin: EdgeInsets.symmetric(vertical: 5.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(7.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: Colors.white,
+                                  backgroundImage: AssetImage(
+                                    "./assets/${controller.configs[index].flag}.png"  ,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  controller.configs[index].name! ?? '',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ],
+                            ),
+                            RoundCheckBox(
+                              size: 24,
+                              checkedWidget: const Icon(Icons.check, size: 18, color: Colors.white),
+                              onTap: (x) {
+                                controller.selectedConfig = controller.configs[index];
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
+          );
+        },
+      )
+    );
+  }
+}
+
+
+
+/*class ServerListPage extends StatefulWidget {
   const ServerListPage({super.key});
 
   @override
@@ -14,76 +103,7 @@ class ServerListPage extends StatefulWidget {
 }
 
 class _ServerListPageState extends State<ServerListPage> {
-  final _serverController = Get.put(ServerController());
-  late ConfigModel selectedConfig;
-  final premiumServers = <Server>[
-    Server(
-        name: 'England',
-        flag: 'assets/england.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'United States',
-        flag: 'assets/usa.jpg',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'Canada',
-        flag: 'assets/canada.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'France',
-        flag: 'assets/france.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'Ghana',
-        flag: 'assets/ghana.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-  ];
-  List<Server> freeServers = [
-    Server(
-        name: 'England',
-        flag: 'assets/england.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'France',
-        flag: 'assets/france.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-    Server(
-        name: 'Ghana',
-        flag: 'assets/ghana.png',
-        domain: 'vpn.example.com',
-        username: 'admin',
-        password: 'admin',
-        port: 1234,
-        mtu: 1234),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -194,5 +214,5 @@ class _ServerListPageState extends State<ServerListPage> {
       ),
     );
   }
-}
+}*/
 

@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import '../servers/server_list_page.dart';
 
 class HomeController extends GetxController {
+
   late Stream<String> durationStream;
   CharonErrorState charonState = CharonErrorState.NO_ERROR;
   Server? server;
