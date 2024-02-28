@@ -6,108 +6,118 @@ import 'package:flutter_v2ray_example/screen/servers/server_item_widget.dart';
 import 'package:get/get.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
-
-
-class ServerListPage extends GetView<ServerController>{
-
+class ServerListPage extends GetView<ServerController> {
   @override
   Widget build(BuildContext context) {
-
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pop();
-        return true;
-      },
-      child: Obx(
-        () {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Servers',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white ,fontWeight: FontWeight.w600),
-              ),
+    return WillPopScope(onWillPop: () async {
+      Navigator.of(context).pop();
+      return true;
+    }, child: Obx(
+      () {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Servers',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.w600),
             ),
-            body: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(20),
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.configs.length,
-                  itemBuilder: (_, index) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: 5.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54,width: 1.0),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: InkWell(
-                        onTap: (){
-                          Get.back();
-
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(7.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 15,
-                                      backgroundColor: Colors.white,
-                                      backgroundImage: AssetImage(
-                                        "./assets/${controller.configs[index].flag}.png"  ,
+          ),
+          body: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  controller.getConfigs();
+                },
+                child: const Text("Refresh"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  controller.getConfigsRealDelay();
+                },
+                child: const Text("Re-Ping"),
+              ),
+              ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(20),
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.configs.length,
+                    itemBuilder: (_, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black54, width: 1.0),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            controller.setConfig(controller.configs[index]);
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(7.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Colors.white,
+                                        // backgroundImage: AssetImage(
+                                        //   "./assets/${controller.configs[index].flag}.png",
+                                        // ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      controller.configs[index].name! ?? '',
-                                      style: Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-
-
-                                  ],
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        controller.configs[index].name! ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              controller.configs[index].ping == null ?
-                              Text(
-                                'Pinging ...',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ):
-                              Text(
-                                controller.configs[index].ping.toString() ,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
+                                controller.configs[index].ping == null
+                                    ? const CircularProgressIndicator()
+                                    : Text(
+                                        controller.configs[index].ping
+                                            .toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                )
-              ],
-            ),
-          );
-        },
-      )
-    );
+                      );
+                    },
+                  )
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    ));
   }
 }
-
-
 
 /*class ServerListPage extends StatefulWidget {
   const ServerListPage({super.key});
@@ -229,4 +239,3 @@ class _ServerListPageState extends State<ServerListPage> {
     );
   }
 }*/
-

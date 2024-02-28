@@ -34,7 +34,6 @@ class DataServices extends GetxService {
           configList.addAll(tempList);
         }
         configs.addAll(configList);
-        print(configs);
         return configs;
       } else {
         print('Error1: ${response.statusCode}');
