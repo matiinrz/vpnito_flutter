@@ -24,14 +24,13 @@ class ServerListPage extends GetView<ServerController>{
             appBar: AppBar(
               title: Text(
                 'Servers',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white ,fontWeight: FontWeight.w600),
               ),
             ),
             body: ListView(
               shrinkWrap: true,
               padding: const EdgeInsets.all(20),
               children: [
-                Center(child: Text(controller.configs.isEmpty ? "خالی" : controller.configs.length.toString(),style: TextStyle(color: Colors.black)),),
                 const SizedBox(
                   height: 20,
                 ),
@@ -48,6 +47,7 @@ class ServerListPage extends GetView<ServerController>{
                       ),
                       child: InkWell(
                         onTap: (){
+                          Get.back();
 
                         },
                         child: Padding(
@@ -56,39 +56,41 @@ class ServerListPage extends GetView<ServerController>{
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 15,
-                                    backgroundColor: Colors.white,
-                                    backgroundImage: AssetImage(
-                                      "./assets/${controller.configs[index].flag}.png"  ,
+                              Expanded(
+                                child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: AssetImage(
+                                        "./assets/${controller.configs[index].flag}.png"  ,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Text(
-                                    controller.configs[index].name! ?? '',
-                                    style: Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Text(
+                                      controller.configs[index].name! ?? '',
+                                      style: Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
 
-                                  controller.configs[index].ping == null ?
-                                  Text(
-                                    'Pinging ...',
-                                    style: Theme.of(context).textTheme.bodySmall,
-                                  ):
-                                  Text(
-                                    controller.configs[index].ping.toString() ,
-                                    style: Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                ],
+
+                                  ],
+                                ),
                               ),
-
+                              controller.configs[index].ping == null ?
+                              Text(
+                                'Pinging ...',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ):
+                              Text(
+                                controller.configs[index].ping.toString() ,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
                             ],
                           ),
                         ),
