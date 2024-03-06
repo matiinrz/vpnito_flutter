@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_v2ray/flutter_v2ray.dart';
+import 'package:flutter_v2ray_example/models/config_model.dart';
 import 'package:flutter_v2ray_example/models/server_model.dart';
 import 'package:flutter_v2ray_example/screen/servers/server_controller.dart';
 import 'package:flutter_v2ray_example/services/data_service.dart';
@@ -12,10 +13,10 @@ import 'package:get/get.dart';
 import '../servers/server_list_page.dart';
 
 class HomeController extends GetxController {
-
   late Stream<String> durationStream;
   CharonErrorState charonState = CharonErrorState.NO_ERROR;
   Server? server;
+  ConfigModel? serverConfig;
   RxString connectionTime = '00.00.00'.obs;
   RxList configs = [].obs;
 
@@ -35,16 +36,23 @@ class HomeController extends GetxController {
       coreVersion = await flutterV2ray.getCoreVersion();
     });
   }
+
   @override
   void onReady() async {
     super.onReady();
-    Future.delayed(Duration(seconds: 3),() {
-      print("Controller Configs${_serverController.configs}");
-    },);
-
-
+    Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        print("Controller Configs${_serverController.configs}");
+      },
+    );
   }
 
+  setServerSelected() {
+    print("serverConfig :  $serverConfig");
+    serverConfig = ServerController().selectedConfig.value;
+    print("serverConfig2 :  $serverConfig");
+  }
 
   final config = TextEditingController();
   bool proxyOnly = false;
@@ -228,9 +236,9 @@ class HomeController extends GetxController {
   Color connectionColorState({FlutterVpnState? state}) {
     switch (state) {
       case FlutterVpnState.connected:
-        return Color.fromRGBO(37, 112, 252, 1);
+        return const Color.fromRGBO(37, 112, 252, 1);
       case FlutterVpnState.connecting:
-        return Color.fromRGBO(87, 141, 240, 1);
+        return const Color.fromRGBO(87, 141, 240, 1);
       case FlutterVpnState.disconnected:
       case FlutterVpnState.disconnecting:
         return Colors.grey;

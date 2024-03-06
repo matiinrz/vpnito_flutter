@@ -40,7 +40,7 @@ class HomePage extends GetView<HomeController> {
           body: StreamBuilder<FlutterVpnState>(
               stream: FlutterVpn.onStateChanged,
               builder: (context, snapshot) {
-                final _flutterVpnState =
+                final flutterVpnState =
                     snapshot.data ?? FlutterVpnState.disconnected;
                 return Stack(
                   children: [
@@ -61,7 +61,7 @@ class HomePage extends GetView<HomeController> {
                           const SizedBox(height: 25),
                           Center(
                               child: Text(
-                                controller.connectionState(state: _flutterVpnState),
+                                controller.connectionState(state: flutterVpnState),
                                 style: Theme.of(context).textTheme.bodyLarge,
                               )),
                           const SizedBox(height: 8),
@@ -81,11 +81,11 @@ class HomePage extends GetView<HomeController> {
                                           .copyWith(
                                           color:
                                           controller.connectionColorState(
-                                              state: _flutterVpnState),
+                                              state: flutterVpnState),
                                           fontWeight: FontWeight.w600),
                                     ));
                               }),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Center(
@@ -102,26 +102,26 @@ class HomePage extends GetView<HomeController> {
                               },
                               borderRadius: BorderRadius.circular(90),
                               child: AvatarGlow(
-                                glowColor: _flutterVpnState !=
+                                glowColor: flutterVpnState !=
                                     FlutterVpnState.connected
                                     ? Colors.transparent
                                     : controller.connectionColorState(
-                                    state: _flutterVpnState),
+                                    state: flutterVpnState),
                                 endRadius: 100.0,
-                                duration: Duration(milliseconds: 2000),
-                                repeat: _flutterVpnState !=
+                                duration: const Duration(milliseconds: 2000),
+                                repeat: flutterVpnState !=
                                     FlutterVpnState.connected
                                     ? false
                                     : true,
                                 showTwoGlows: true,
                                 repeatPauseDuration:
-                                Duration(milliseconds: 100),
+                                const Duration(milliseconds: 100),
                                 shape: BoxShape.circle,
                                 child: Material(
                                   elevation: 0,
-                                  shape: CircleBorder(),
+                                  shape: const CircleBorder(),
                                   color: controller.connectionColorState(
-                                      state: _flutterVpnState),
+                                      state: flutterVpnState),
                                   child: SizedBox(
                                     height: 150,
                                     width: 150,
@@ -131,14 +131,14 @@ class HomePage extends GetView<HomeController> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.center,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.power_settings_new,
                                           color: Colors.white,
                                           size: 50,
                                         ),
-                                        SizedBox(height: 10),
+                                        const SizedBox(height: 10),
                                         Text(
-                                          '${controller.connectionButtonState(state: _flutterVpnState)}',
+                                          controller.connectionButtonState(state: flutterVpnState),
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium!
@@ -152,7 +152,7 @@ class HomePage extends GetView<HomeController> {
                             ),
                           ),
                           Text(controller.connectionTime.toString(),style: Theme.of(context).textTheme.bodyLarge,),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           StreamBuilder<String>(
@@ -169,13 +169,13 @@ class HomePage extends GetView<HomeController> {
                                           color: Colors.black,
                                         )));
                               }),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           ServerItemWidget(
                             flagAsset:
-                            controller.server?.flag ?? 'assets/logo.png',
-                            label: controller.server?.name ??
+                            controller.serverConfig?.flag ?? 'assets/logo.png',
+                            label: controller.serverConfig?.name ??
                                 'No sever selected',
                             icon: Icons.arrow_forward_ios,
                             onTap: () async {
@@ -194,11 +194,11 @@ class HomePage extends GetView<HomeController> {
                               }
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           // FastestServerWidget(label: label, icon: icon, flagAsset: flagAsset, onTap: onTap),
-                          Spacer(),
+                          const Spacer(),
                           TextButton.icon(
                             style: TextButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -209,10 +209,10 @@ class HomePage extends GetView<HomeController> {
                                   MediaQuery.of(context).size.width /
                                       4.5),
                               backgroundColor:
-                              Color.fromRGBO(37, 112, 252, 1),
+                              const Color.fromRGBO(37, 112, 252, 1),
                             ),
                             onPressed: () {},
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.star,
                               color: Colors.white,
                             ),
@@ -224,7 +224,7 @@ class HomePage extends GetView<HomeController> {
                                   .copyWith(color: Colors.white),
                             ),
                           ),
-                          SizedBox(height: 35),
+                          const SizedBox(height: 35),
                         ],
                       ),
                     ),

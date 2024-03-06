@@ -4,12 +4,14 @@ import 'package:flutter_v2ray_example/models/config_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_v2ray/flutter_v2ray.dart';
 
+import '../../services/data_service.dart';
+
 class ServerController extends GetxController {
   final selectedConfig = Rxn<ConfigModel>();
 
-  // RxList<ConfigModel> configs = <ConfigModel>[].obs;
+  RxList<ConfigModel> configs = <ConfigModel>[].obs;
 
-  RxList<ConfigModel> configs = <ConfigModel>[
+  /*RxList<ConfigModel> configs = <ConfigModel>[
     ConfigModel(
       id: 1,
       config:
@@ -43,7 +45,7 @@ class ServerController extends GetxController {
       createdAt: "2024-02-04T12:16:01.000000Z",
       updatedAt: "2024-02-04T12:16:01.000000Z",
     ),
-  ].obs;
+  ].obs;*/
 
   // V2ray Stuffs
   String remark = "Default Remark";
@@ -76,9 +78,9 @@ class ServerController extends GetxController {
     selectedConfig?.value = config;
   }
 
-  void getConfigs() {
-    // configs.value = await DataServices().getConfigs();
-    configs.value = <ConfigModel>[
+  void getConfigs() async{
+    configs.value = await DataServices().getConfigs();
+    /*configs.value = <ConfigModel>[
       ConfigModel(
         id: 1,
         config:
@@ -112,7 +114,7 @@ class ServerController extends GetxController {
         createdAt: "2024-02-04T12:16:01.000000Z",
         updatedAt: "2024-02-04T12:16:01.000000Z",
       ),
-    ];
+    ];*/
     getConfigsRealDelay();
   }
 
@@ -127,6 +129,7 @@ class ServerController extends GetxController {
       debugPrint("Config Name: ${conf.name!} PING: $delay");
       conf.ping = delay;
     }
+    Get.reload();
     sortConfigsByPing();
   }
 
