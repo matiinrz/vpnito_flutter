@@ -64,8 +64,7 @@ class ServerListPage extends GetView<ServerController> {
                           child: InkWell(
                             onTap: () {
                               controller.setConfig(controller.configs[index]);
-                              HomeController().setServerSelected();
-                              Get.back();
+                              Get.back(result: controller.selectedConfig);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(7.0),

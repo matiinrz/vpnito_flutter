@@ -13,12 +13,27 @@ import 'package:get/get.dart';
 import '../servers/server_list_page.dart';
 
 class HomeController extends GetxController {
+
   late Stream<String> durationStream;
   CharonErrorState charonState = CharonErrorState.NO_ERROR;
   Server? server;
-  ConfigModel? serverConfig;
+  Rxn<ConfigModel>? serverConfig;
+  ConfigModel? selectedConfig;
   RxString connectionTime = '00.00.00'.obs;
   RxList configs = [].obs;
+  final config = TextEditingController();
+  bool proxyOnly = false;
+  var v2rayStatus = ValueNotifier<V2RayStatus>(V2RayStatus());
+  final bypassSubnetController = TextEditingController();
+  List<String> bypassSubnets = [];
+  String? coreVersion;
+
+  String remark = "Default Remark";
+
+  final _serverController = Get.put(ServerController());
+
+
+
 
   late final FlutterV2ray flutterV2ray = FlutterV2ray(
     onStatusChanged: (status) {
@@ -35,11 +50,14 @@ class HomeController extends GetxController {
     flutterV2ray.initializeV2Ray().then((value) async {
       coreVersion = await flutterV2ray.getCoreVersion();
     });
+
+
   }
 
   @override
   void onReady() async {
     super.onReady();
+
     Future.delayed(
       const Duration(seconds: 3),
       () {
@@ -48,22 +66,20 @@ class HomeController extends GetxController {
     );
   }
 
-  setServerSelected() {
-    print("serverConfig :  $serverConfig");
-    serverConfig = ServerController().selectedConfig.value;
-    print("serverConfig2 :  $serverConfig");
+  void navigateToServerListPage() async {
+    ConfigModel? selectedConfig = await Get.to(ServerListPage());
+    print("naviiiiiii");
+    // اگر کاربر سروری انتخاب کرده باشد
+    if (selectedConfig != null) {
+      print("yessssssssss");
+
+      // انجام عملیات مربوط به سرور انتخاب شده در HomeController
+      // مثلا ذخیره اطلاعات در یک متغیر
+      serverConfig = selectedConfig.obs as Rxn<ConfigModel>?;
+
+      // یا انجام هر عملیات دلخواه دیگر...
+    }
   }
-
-  final config = TextEditingController();
-  bool proxyOnly = false;
-  var v2rayStatus = ValueNotifier<V2RayStatus>(V2RayStatus());
-  final bypassSubnetController = TextEditingController();
-  List<String> bypassSubnets = [];
-  String? coreVersion;
-
-  String remark = "Default Remark";
-
-  final _serverController = Get.put(ServerController());
 
   Future<void> fetchData() async {
     // _serverController.setConfigs(await DataServices().getConfigs());
@@ -89,7 +105,7 @@ class HomeController extends GetxController {
     }
   }*/
 
-  void connect() async {
+ /* void connect() async {
     if (await flutterV2ray.requestPermission()) {
       flutterV2ray.startV2Ray(
         remark: remark,
@@ -197,7 +213,7 @@ class HomeController extends GetxController {
         ),
       ),
     );
-  }
+  }*/
 
   String connectionState({FlutterVpnState? state}) {
     switch (state) {

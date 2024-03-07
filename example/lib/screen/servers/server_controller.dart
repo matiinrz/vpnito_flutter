@@ -63,7 +63,7 @@ class ServerController extends GetxController {
     getConfigs();
 
     selectedConfig.listen((value) {
-      debugPrint("selectedConfig Changed");
+      // debugPrint("selectedConfig Changed");
       if (value != null) _connectV2ray(_getConfigFullConfig(value.config!));
     });
 
@@ -73,8 +73,6 @@ class ServerController extends GetxController {
   }
 
   void setConfig(ConfigModel config) {
-    // maybe later need to do more things after config get selected so we use
-    // this function to change to selectedConfig.
     selectedConfig?.value = config;
   }
 
@@ -142,7 +140,10 @@ class ServerController extends GetxController {
         return 1; // move a to the end
       } else if (b.ping == -1) {
         return -1; // move b to the end
-      } else {
+      } else if (a.ping == null ){
+        return -1;
+      }
+      else {
         return a.ping!.compareTo(b.ping!); // normal comparison
       }
     });

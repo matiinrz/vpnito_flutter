@@ -90,9 +90,10 @@ class HomePage extends GetView<HomeController> {
                           ),
                           Center(
                             child: InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 print("object");
                                 controller.fetchData();
+
                                 // controller.connect();
                                 /*controller
                                       .vpnConnectionDuration()
@@ -174,11 +175,13 @@ class HomePage extends GetView<HomeController> {
                           ),
                           ServerItemWidget(
                             flagAsset:
-                            controller.serverConfig?.flag ?? 'assets/logo.png',
-                            label: controller.serverConfig?.name ??
+                            controller.serverConfig?.value?.flag ?? 'assets/logo.png',
+                            label: controller.serverConfig?.value?.name ??
                                 'No sever selected',
                             icon: Icons.arrow_forward_ios,
                             onTap: () async {
+                              controller.selectedConfig = await Get.to(ServerListPage());
+
                               final res = await Navigator.of(context)
                                   .push(MaterialPageRoute(builder: (context) {
                                 return ServerListPage();
