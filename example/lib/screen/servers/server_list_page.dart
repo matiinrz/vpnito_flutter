@@ -26,7 +26,7 @@ class ServerListPage extends GetView<ServerController> {
             ),
           ),
           body: RefreshIndicator(
-            onRefresh: () async{
+            onRefresh: () async {
               print("refresh");
               controller.getConfigsRealDelay();
             },
@@ -44,6 +44,12 @@ class ServerListPage extends GetView<ServerController> {
                   },
                   child: const Text("Re-Ping"),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    controller.disconnectV2ray();
+                  },
+                  child: const Text("Disconnect"),
+                ),
                 ListView(
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(20),
@@ -58,19 +64,21 @@ class ServerListPage extends GetView<ServerController> {
                         return Container(
                           margin: const EdgeInsets.symmetric(vertical: 5.0),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black54, width: 1.0),
+                            border:
+                                Border.all(color: Colors.black54, width: 1.0),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: InkWell(
                             onTap: () {
                               controller.setConfig(controller.configs[index]);
-                              Get.back(result: controller.selectedConfig);
+                              // Get.back(result: controller.selectedConfig);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(7.0),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Wrap(
@@ -100,7 +108,7 @@ class ServerListPage extends GetView<ServerController> {
                                     ),
                                   ),
                                   controller.configs[index].ping == null
-                                      ? const CircularProgressIndicator()
+                                      ? const Text("Waiting For Ping")
                                       : Text(
                                           controller.configs[index].ping
                                               .toString(),

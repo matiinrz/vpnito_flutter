@@ -46,24 +46,11 @@ class HomeController extends GetxController {
     super.onInit();
     fetchData();
     print("oninit");
-    durationStream = vpnConnectionDuration();
     flutterV2ray.initializeV2Ray().then((value) async {
       coreVersion = await flutterV2ray.getCoreVersion();
     });
 
 
-  }
-
-  @override
-  void onReady() async {
-    super.onReady();
-
-    Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        print("Controller Configs${_serverController.configs}");
-      },
-    );
   }
 
   void navigateToServerListPage() async {
@@ -87,133 +74,6 @@ class HomeController extends GetxController {
     _serverController.refresh();
   }
 
-  /*Future<void> fetchData() async {
-    const String apiUrl = 'http://mortred.snapplr.top/api/configs';
-    print("Start fetching data");
-    try {
-      final response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        print(jsonData);
-
-      } else {
-        print('Error1: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error2: $error');
-    }
-  }*/
-
- /* void connect() async {
-    if (await flutterV2ray.requestPermission()) {
-      flutterV2ray.startV2Ray(
-        remark: remark,
-        config: config.text,
-        proxyOnly: proxyOnly,
-        bypassSubnets: bypassSubnets,
-      );
-    } else {
-      if (Get.context!.mounted) {
-        ScaffoldMessenger.of(Get.context!).showSnackBar(
-          const SnackBar(
-            content: Text('Permission Denied'),
-          ),
-        );
-      }
-    }
-  }
-
-  void importConfig() async {
-    if (await Clipboard.hasStrings()) {
-      try {
-        final String link =
-            (await Clipboard.getData('text/plain'))?.text?.trim() ?? '';
-        final V2RayURL v2rayURL = FlutterV2ray.parseFromURL(link);
-        remark = v2rayURL.remark;
-        config.text = v2rayURL.getFullConfiguration();
-        if (Get.context!.mounted) {
-          ScaffoldMessenger.of(Get.context!).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Success',
-              ),
-            ),
-          );
-        }
-      } catch (error) {
-        if (Get.context!.mounted) {
-          ScaffoldMessenger.of(Get.context!).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Error: $error',
-              ),
-            ),
-          );
-        }
-      }
-    }
-  }
-
-  void delay() async {
-    late int delay;
-    if (v2rayStatus.value.state == 'CONNECTED') {
-      delay = await flutterV2ray.getConnectedServerDelay();
-    } else {
-      delay = await flutterV2ray.getServerDelay(config: config.text);
-    }
-    if (!Get.context!.mounted) return;
-    ScaffoldMessenger.of(Get.context!).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${delay}ms',
-        ),
-      ),
-    );
-  }
-
-  void bypassSubnet() {
-    bypassSubnetController.text = bypassSubnets.join("\n");
-
-    showDialog(
-      context: Get.context!,
-      builder: (context) => Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Subnets:',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 5),
-              TextFormField(
-                controller: bypassSubnetController,
-                maxLines: 5,
-                minLines: 5,
-              ),
-              const SizedBox(height: 5),
-              ElevatedButton(
-                onPressed: () {
-                  bypassSubnets =
-                      bypassSubnetController.text.trim().split('\n');
-                  if (bypassSubnets.first.isEmpty) {
-                    bypassSubnets = [];
-                  }
-                  Get.back();
-                },
-                child: const Text('Submit'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }*/
 
   String connectionState({FlutterVpnState? state}) {
     switch (state) {
@@ -262,45 +122,5 @@ class HomeController extends GetxController {
       default:
         return Colors.red;
     }
-  }
-
-  Stream<String> vpnConnectionDuration() async* {
-    if (server == null) {
-      yield 'Please select a server!';
-      return;
-    }
-    debugPrint('called');
-    yield 'Connecting...';
-    // Connect to VPN service
-    await FlutterVpn.connectIkev2EAP(
-      server: server!.domain!,
-      username: server!.username!,
-      password: server!.password!,
-      name: server!.name!,
-      mtu: server!.mtu!,
-      port: server!.port!,
-    );
-
-    // Get current time
-    DateTime startTime = DateTime.now();
-
-    // Wait for VPN to connect
-    FlutterVpn.prepare();
-
-    // Create a timer that emits the duration of the VPN connection every second
-    Timer.periodic(const Duration(seconds: 1), (timer) async* {
-      // Get current time
-      DateTime now = DateTime.now();
-
-      // Calculate duration of VPN connection
-      Duration duration = now.difference(startTime);
-
-      // Format duration as 00.00.00
-      String formattedDuration =
-          "${duration.inHours.toString().padLeft(2, '0')}.${(duration.inMinutes % 60).toString().padLeft(2, '0')}.${(duration.inSeconds % 60).toString().padLeft(2, '0')}";
-      debugPrint(formattedDuration);
-      // Emit the formatted duration
-      yield formattedDuration;
-    });
   }
 }
