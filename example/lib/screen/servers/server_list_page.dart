@@ -70,7 +70,10 @@ class ServerListPage extends GetView<ServerController> {
                           ),
                           child: InkWell(
                             onTap: () {
-                              controller.setConfig(controller.configs[index]);
+                              print("esmesh : ${controller.configs[index]}");
+
+                              Get.back(result: controller.configs[index]);
+                              // controller.setConfig(controller.configs[index]);
                               // Get.back(result: controller.selectedConfig);
                             },
                             child: Padding(

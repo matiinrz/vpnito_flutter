@@ -6,10 +6,10 @@ import 'package:flutter_v2ray/flutter_v2ray.dart';
 import '../../services/data_service.dart';
 
 class ServerController extends GetxController {
-  final selectedConfig = Rxn<ConfigModel>();
+
+  Rx<ConfigModel?> selectedConfig = Rx<ConfigModel?>(null);
   RxList<ConfigModel> configs = <ConfigModel>[].obs;
 
-  // V2ray Stuffs
   String remark = "Default Remark";
   String? coreVersion;
   late final FlutterV2ray flutterV2ray = FlutterV2ray(
