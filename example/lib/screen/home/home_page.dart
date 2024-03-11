@@ -15,29 +15,29 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
           backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            centerTitle: true,
-            title: Text(
-              'VPNITO',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(fontWeight: FontWeight.w600),
-            ),
-            leading: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/logo.png',
-                width: 30,
-                height: 30,
-                fit: BoxFit.scaleDown,
-              ),
+          centerTitle: true,
+          title: Text(
+            'VPNITO',
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(
+              'assets/logo.png',
+              width: 30,
+              height: 30,
+              fit: BoxFit.scaleDown,
             ),
           ),
-          body: Stack(
+        ),
+        body: Obx(
+          () => Stack(
             children: [
               Positioned(
                   top: 50,
@@ -86,9 +86,8 @@ class HomePage extends GetView<HomeController> {
                       child: InkWell(
                         onTap: () async {
                           print("object");
-                          controller.fetchData();
-
-                          // controller.connect();
+                          // controller.fetchData();
+                          controller.toggleV2rayConnection();// controller.connect();
                           /*controller
                                       .vpnConnectionDuration()
                                       .listen((event) {
@@ -97,7 +96,7 @@ class HomePage extends GetView<HomeController> {
                         },
                         borderRadius: BorderRadius.circular(90),
                         child: AvatarGlow(
-                          glowColor: Colors.black38,
+                          glowColor: controller.v2rayStatus.value.state == "CONNECTED" ? Colors.blue : Colors.grey,
                           endRadius: 100.0,
                           duration: const Duration(milliseconds: 2000),
                           repeat: true,
@@ -108,7 +107,7 @@ class HomePage extends GetView<HomeController> {
                           child: Material(
                             elevation: 0,
                             shape: const CircleBorder(),
-                            color: Colors.black38,
+                            color: controller.v2rayStatus.value.state == "CONNECTED" ? Colors.blue : Colors.grey,
                             child: SizedBox(
                               height: 150,
                               width: 150,
@@ -125,7 +124,7 @@ class HomePage extends GetView<HomeController> {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    "dis/con",
+                                    controller.v2rayStatus.value.state == "CONNECTED" ? "CONNECTED" : "Tap To Connect",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
@@ -149,18 +148,15 @@ class HomePage extends GetView<HomeController> {
                       height: 25,
                     ),
                     ServerItemWidget(
-                      flagAsset: controller.selectedConfig?.value?.flag ??
-                          'assets/logo.png',
-                      label: controller.selectedConfig?.value?.name ??
+                      flagAsset: controller.selectedConfig?.value.flag != null ? "./assets/${controller.selectedConfig?.value.flag}.png" :
+                      'assets/logo.png',
+                      label: controller.selectedConfig?.value.name ??
                           'No sever selected',
                       icon: Icons.arrow_forward_ios,
                       onTap: () async {
                         Get.to(ServerListPage())?.then((selectedConfig) {
-
-                          print("fuckkkkkkk2 : ${controller.selectedConfig}");
-                          print("fuckkkkkkk3 : $selectedConfig");
                           controller.selectedConfig = Rx<ConfigModel>(selectedConfig);
-                          print("fuckkkkkkk : ${controller.selectedConfig}");
+                          Get.reload();
                         });
                       },
                     ),
@@ -197,7 +193,7 @@ class HomePage extends GetView<HomeController> {
                 ),
               ),
             ],
-          )),
-    );
+          ),
+        ));
   }
 }

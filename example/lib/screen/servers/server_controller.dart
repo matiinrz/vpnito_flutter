@@ -25,9 +25,9 @@ class ServerController extends GetxController {
     super.onInit();
     getConfigs();
 
-    selectedConfig.listen((value) {
+   /* selectedConfig.listen((value) {
       if (value != null) _connectV2ray(_getConfigFullConfig(value.config!));
-    });
+    });*/
 
     flutterV2ray.initializeV2Ray().then((value) async {
       coreVersion = await flutterV2ray.getCoreVersion();
@@ -94,7 +94,7 @@ class ServerController extends GetxController {
     }
   }
 
-  void _connectV2ray(String configText) async {
+ /* void _connectV2ray(String configText) async {
     debugPrint(v2rayStatus.value.state);
     if (await flutterV2ray.requestPermission()) {
       flutterV2ray.startV2Ray(
@@ -117,7 +117,7 @@ class ServerController extends GetxController {
   void onClose() {
     disconnectV2ray();
     super.onClose();
-  }
+  }*/
 
   void disconnectV2ray() {
     debugPrint("V2ray Stopped Working");

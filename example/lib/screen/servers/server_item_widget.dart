@@ -36,7 +36,7 @@ class ServerItemWidget extends StatelessWidget {
                   CircleAvatar(
                     radius: 15,
                     backgroundColor: Colors.white,
-                    backgroundImage: ExactAssetImage(
+                    backgroundImage: AssetImage(
                       flagAsset,
                     ),
                   ),
