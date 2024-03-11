@@ -19,6 +19,8 @@ class HomeController extends GetxController {
   RxList configs = [].obs;
   var v2rayStatus = ValueNotifier<V2RayStatus>(V2RayStatus());
   String? coreVersion;
+  RxString uploadSpeed = "0.0".obs;
+  RxString downloadSpeed = "0.0".obs;
 
   String remark = "Default Remark";
 
@@ -41,6 +43,8 @@ class HomeController extends GetxController {
     flutterV2ray.initializeV2Ray().then((value) async {
       coreVersion = await flutterV2ray.getCoreVersion();
     });
+    downloadSpeed.value = v2rayStatus.value.downloadSpeed;
+    uploadSpeed.value = v2rayStatus.value.uploadSpeed;
   }
 
   String _getConfigFullConfig(String config) {
@@ -99,6 +103,8 @@ class HomeController extends GetxController {
   void toggleV2rayConnection() async {
     if (v2rayStatus.value.state == "CONNECTED") {
       await flutterV2ray.stopV2Ray();
+      Get.forceAppUpdate();
+
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
           content: Text('VPN Disconnected'),

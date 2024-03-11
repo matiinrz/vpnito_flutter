@@ -87,7 +87,9 @@ class HomePage extends GetView<HomeController> {
                         onTap: () async {
                           print("object");
                           // controller.fetchData();
-                          controller.toggleV2rayConnection();// controller.connect();
+                          controller.toggleV2rayConnection();
+                          // controller.connect();
+
                           /*controller
                                       .vpnConnectionDuration()
                                       .listen((event) {
@@ -137,9 +139,17 @@ class HomePage extends GetView<HomeController> {
                         ),
                       ),
                     ),
-                    Text(
-                      controller.connectionTime.toString(),
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Speed:'),
+                        const SizedBox(width: 10),
+                        Text(controller.uploadSpeed.value),
+                        const Text('↑'),
+                        const SizedBox(width: 10),
+                        Text(controller.downloadSpeed.value),
+                        const Text('↓'),
+                      ],
                     ),
                     const SizedBox(
                       height: 20,
@@ -157,6 +167,7 @@ class HomePage extends GetView<HomeController> {
                         Get.to(ServerListPage())?.then((selectedConfig) {
                           controller.selectedConfig = Rx<ConfigModel>(selectedConfig);
                           Get.reload();
+                          Get.forceAppUpdate();
                         });
                       },
                     ),
