@@ -85,16 +85,7 @@ class HomePage extends GetView<HomeController> {
                     Center(
                       child: InkWell(
                         onTap: () async {
-                          print("object");
-                          // controller.fetchData();
                           controller.toggleV2rayConnection();
-                          // controller.connect();
-
-                          /*controller
-                                      .vpnConnectionDuration()
-                                      .listen((event) {
-                                    print(event);
-                                  });*/
                         },
                         borderRadius: BorderRadius.circular(90),
                         child: AvatarGlow(

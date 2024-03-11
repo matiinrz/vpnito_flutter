@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_v2ray/flutter_v2ray.dart';
 import 'package:flutter_v2ray_example/models/config_model.dart';
 import 'package:flutter_v2ray_example/screen/servers/server_controller.dart';
@@ -11,7 +12,8 @@ import 'package:flutter_v2ray/flutter_v2ray.dart';
 
 class HomeController extends GetxController {
 
-
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
   late Stream<String> durationStream;
   Rxn<ConfigModel>? serverConfig;
   Rx<ConfigModel>? selectedConfig ;
@@ -114,6 +116,41 @@ class HomeController extends GetxController {
        connectV2ray();
     }
   }
+
+  Future<void> initNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('/assets/logo.png');
+    final InitializationSettings initializationSettings =
+    InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:(details) {
+        print("boooooobs :  $details");
+        // اینجا اعلان انتخاب شده را پردازش کنید
+      },
+
+    );
+  }
+
+  Future<void> showNotification(String title, String body) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'VPNITO',
+      'VolcanoCoder',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
+  }
+
 
 
 }
