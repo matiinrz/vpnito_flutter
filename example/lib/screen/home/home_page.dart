@@ -75,7 +75,7 @@ class HomePage extends GetView<HomeController> {
                                     .bodyLarge!
                                     .copyWith(
                                     color:
-                                    Colors.red,
+                                    Colors.grey,
                                     fontWeight: FontWeight.w600),
                               ));
                         }),
@@ -135,10 +135,10 @@ class HomePage extends GetView<HomeController> {
                       children: [
                         const Text('Speed:'),
                         const SizedBox(width: 10),
-                        Text(controller.uploadSpeed.value),
+                        Text(controller.v2rayStatus.value.uploadSpeed),
                         const Text('↑'),
                         const SizedBox(width: 10),
-                        Text(controller.downloadSpeed.value),
+                        Text(controller.v2rayStatus.value.downloadSpeed),
                         const Text('↓'),
                       ],
                     ),

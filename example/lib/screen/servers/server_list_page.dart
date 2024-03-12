@@ -17,6 +17,7 @@ class ServerListPage extends GetView<ServerController> {
       () {
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Color.fromRGBO(37, 112, 252, 1),
             title: Text(
               'Servers',
               style: Theme.of(context)
@@ -32,24 +33,6 @@ class ServerListPage extends GetView<ServerController> {
             },
             child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    controller.getConfigs();
-                  },
-                  child: const Text("Refresh"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    controller.getConfigsRealDelay();
-                  },
-                  child: const Text("Re-Ping"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    controller.disconnectV2ray();
-                  },
-                  child: const Text("Disconnect"),
-                ),
                 ListView(
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(20),
@@ -70,11 +53,7 @@ class ServerListPage extends GetView<ServerController> {
                           ),
                           child: InkWell(
                             onTap: () {
-                              print("esmesh : ${controller.configs[index]}");
-
                               Get.back(result: controller.configs[index]);
-                              // controller.setConfig(controller.configs[index]);
-                              // Get.back(result: controller.selectedConfig);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(7.0),
@@ -88,12 +67,12 @@ class ServerListPage extends GetView<ServerController> {
                                       crossAxisAlignment:
                                           WrapCrossAlignment.center,
                                       children: [
-                                        const CircleAvatar(
+                                        CircleAvatar(
                                           radius: 15,
                                           backgroundColor: Colors.white,
-                                          // backgroundImage: AssetImage(
-                                          //   "./assets/${controller.configs[index].flag}.png",
-                                          // ),
+                                          backgroundImage: AssetImage(
+                                            "./assets/${controller.configs[index].flag}.png" ?? "./assets/logo.png",
+                                          ),
                                         ),
                                         const SizedBox(
                                           width: 15,
@@ -113,11 +92,10 @@ class ServerListPage extends GetView<ServerController> {
                                   controller.configs[index].ping == null
                                       ? const Text("Waiting For Ping")
                                       : Text(
-                                          controller.configs[index].ping
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
+                                          "${controller.configs[index].ping} ms",
+                                          style: TextStyle(
+                                            color: controller.configs[index].ping! == -1 ? Colors.red : controller.configs[index].ping! <= 700 ? Colors.green : controller.configs[index].ping! <= 2200 ? Colors.amber : Colors.red
+                                          ),
                                         ),
                                 ],
                               ),

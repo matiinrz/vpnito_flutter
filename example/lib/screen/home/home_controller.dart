@@ -6,30 +6,30 @@ import 'package:flutter_v2ray_example/models/config_model.dart';
 import 'package:flutter_v2ray_example/screen/servers/server_controller.dart';
 import 'package:flutter_v2ray_example/services/data_service.dart';
 import 'package:get/get.dart';
-import 'package:flutter_v2ray/flutter_v2ray.dart';
-
-
 
 class HomeController extends GetxController {
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
+  final RxBool vpnConnected = false.obs;
+
   late Stream<String> durationStream;
   Rxn<ConfigModel>? serverConfig;
-  Rx<ConfigModel>? selectedConfig ;
+  Rx<ConfigModel>? selectedConfig;
+
   RxString connectionTime = '00.00.00'.obs;
   RxList configs = [].obs;
-  var v2rayStatus = ValueNotifier<V2RayStatus>(V2RayStatus());
+
+  // var v2rayStatus = ValueNotifier<V2RayStatus>(V2RayStatus());
+  var v2rayStatus = Rx<V2RayStatus>(V2RayStatus());
+
   String? coreVersion;
   RxString uploadSpeed = "0.0".obs;
   RxString downloadSpeed = "0.0".obs;
 
-  String remark = "Default Remark";
+  String remark = "VPN CONNECTED";
 
   final _serverController = Get.put(ServerController());
-
-
-
 
   late final FlutterV2ray flutterV2ray = FlutterV2ray(
     onStatusChanged: (status) {
@@ -41,40 +41,33 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     fetchData();
-    print("oninit");
     flutterV2ray.initializeV2Ray().then((value) async {
       coreVersion = await flutterV2ray.getCoreVersion();
     });
-    downloadSpeed.value = v2rayStatus.value.downloadSpeed;
-    uploadSpeed.value = v2rayStatus.value.uploadSpeed;
+    initializeNotifications();
+
   }
 
   String _getConfigFullConfig(String config) {
     return FlutterV2ray.parseFromURL(config).getFullConfiguration();
   }
 
-
-
-
   Future<void> fetchData() async {
     // _serverController.setConfigs(await DataServices().getConfigs());
     _serverController.configs.value = await DataServices().getConfigs();
     _serverController.refresh();
   }
+
   void connectV2ray() async {
-    debugPrint("statussss : ${v2rayStatus.value.state}");
-    debugPrint("configggggg : ${selectedConfig?.value.config}");
     if (await flutterV2ray.requestPermission()) {
-      if(selectedConfig?.value.config != null){
+      if (selectedConfig?.value.config != null) {
 
         flutterV2ray.startV2Ray(
           remark: remark,
           config: _getConfigFullConfig(selectedConfig?.value.config ?? ""),
           proxyOnly: false,
         );
-
       }
-
     } else {
       if (Get.context!.mounted) {
         ScaffoldMessenger.of(Get.context!).showSnackBar(
@@ -85,6 +78,7 @@ class HomeController extends GetxController {
       }
     }
   }
+
   /*void delay() async {
     late int delay;
     if (v2rayStatus.value.state == 'CONNECTED') {
@@ -103,9 +97,18 @@ class HomeController extends GetxController {
   }*/
 
   void toggleV2rayConnection() async {
+    vpnConnected.toggle();
+
+    if (vpnConnected.value) {
+      showNotification('VPN Connected', 'You are now connected to the VPN.');
+    } else {
+      flutterLocalNotificationsPlugin.cancel(0);
+    }
+
     if (v2rayStatus.value.state == "CONNECTED") {
       await flutterV2ray.stopV2Ray();
       Get.forceAppUpdate();
+      flutterLocalNotificationsPlugin.cancel(0);
 
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
@@ -113,44 +116,54 @@ class HomeController extends GetxController {
         ),
       );
     } else {
-       connectV2ray();
+      connectV2ray();
     }
   }
 
-  Future<void> initNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('/assets/logo.png');
-    final InitializationSettings initializationSettings =
-    InitializationSettings(android: initializationSettingsAndroid);
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse:(details) {
-        print("boooooobs :  $details");
-        // اینجا اعلان انتخاب شده را پردازش کنید
-      },
 
-    );
+  Future<void> initializeNotifications() async {
+    var initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> onSelectNotification(String? payload) async {
+    // Handle notification tap
   }
 
   Future<void> showNotification(String title, String body) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-      'VPNITO',
-      'VolcanoCoder',
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'vpn_channel',
+      'VPN Channel',
       importance: Importance.max,
       priority: Priority.high,
+      playSound: true,
+      icon: '@mipmap/ic_launcher',
+      largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
     );
-    const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(
       0,
       title,
       body,
       platformChannelSpecifics,
+      payload: 'vpn_payload',
     );
   }
 
+  void toggleVPNConnection() {
+    vpnConnected.toggle();
 
+    if (vpnConnected.value) {
+      showNotification('VPN Connected', 'You are now connected to the VPN.');
+    } else {
+      flutterLocalNotificationsPlugin.cancel(0);
+    }
+  }
 
 }

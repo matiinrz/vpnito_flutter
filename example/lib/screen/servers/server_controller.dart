@@ -14,7 +14,6 @@ class ServerController extends GetxController {
   String? coreVersion;
   late final FlutterV2ray flutterV2ray = FlutterV2ray(
     onStatusChanged: (status) {
-      print("V2ray STATUUUUUUUUUUUS $status");
       v2rayStatus.value = status;
     },
   );
@@ -49,10 +48,8 @@ class ServerController extends GetxController {
   }
 
   void getConfigsRealDelay() async {
-    debugPrint("Get Config Real Delay Called");
     for (ConfigModel conf in configs) {
       int delay = await _checkRealDelay(_getConfigFullConfig(conf.config!));
-      debugPrint("Config Name: ${conf.name!} PING: $delay");
       conf.ping = delay;
     }
     Get.reload();
@@ -60,7 +57,6 @@ class ServerController extends GetxController {
   }
 
   void sortConfigsByPing() async {
-    debugPrint("Sort Config By Ping");
     configs.sort((a, b) {
       if (a.ping == -1 && b.ping == -1) {
         return 0; // if both have -1, maintain current order
