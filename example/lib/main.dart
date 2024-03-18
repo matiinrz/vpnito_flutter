@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_v2ray_example/screen/home/home_page.dart';
+import 'package:flutter_v2ray_example/screen/splash/splash_page.dart';
 import 'package:get/get.dart';
 
 import 'bindings/bindings.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       initialBinding: MyBindings(),
       title: 'VPNITO',
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const SplashPage(),
     );
     /*MaterialApp(
       debugShowCheckedModeBanner: false,
