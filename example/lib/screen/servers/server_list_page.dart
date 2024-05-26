@@ -17,13 +17,14 @@ class ServerListPage extends GetView<ServerController> {
       () {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Color.fromRGBO(37, 112, 252, 1),
+            backgroundColor: Colors.white,
+            centerTitle: true,
             title: Text(
               'Servers',
               style: Theme.of(context)
                   .textTheme
                   .titleLarge!
-                  .copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                  .copyWith(color: Colors.blue, fontWeight: FontWeight.w600),
             ),
           ),
           body: RefreshIndicator(
