@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.github.blueboytm.flutter_v2ray_example"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {

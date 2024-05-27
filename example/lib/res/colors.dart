@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const welcomeScreenBackground = Color(0xFFFF4B3A);
-  static const primaryColor = Color(0xFFFA4A0C);
+  static const primaryColor = Color(0xFF044D80);
   static const secondaryColor = Colors.white;
   static const buttonTextColorPrimary = Color(0xFFFF460A);
   static const buttonTextColorSecondary = Color(0xFFFFFFFF);

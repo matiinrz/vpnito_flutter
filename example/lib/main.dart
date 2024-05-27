@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'VPNITO',
       debugShowCheckedModeBanner: false,
       home: const SplashPage(),
+
     );
     /*MaterialApp(
       debugShowCheckedModeBanner: false,

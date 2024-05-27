@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_v2ray_example/models/config_model.dart';
+import 'package:flutter_v2ray_example/res/colors.dart';
+import 'package:flutter_v2ray_example/res/theme.dart';
 import 'package:flutter_v2ray_example/screen/home/home_controller.dart';
+import 'package:flutter_v2ray_example/screen/home/home_page.dart';
 import 'package:flutter_v2ray_example/screen/servers/server_controller.dart';
 import 'package:flutter_v2ray_example/screen/splash/splash_controller.dart';
 import 'package:get/get.dart';
@@ -50,6 +53,20 @@ class SplashPage extends GetView<SplashController> {
                         fontSize: 16.0
                       ),
                     ),
+                  ),
+                  SizedBox(height: 30,),
+                  Container(
+                    width: Get.width * 0.5,
+                    height: Get.height * 0.07,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: AppColors.primaryColor,
+                    ),
+                    child: InkWell(
+                      onTap: (){
+                        Get.off(HomePage());
+                      },
+                        child: Center(child: Text("Get Start !",style: AppTheme.theme.textTheme.titleMedium?.copyWith(color: Colors.white)))),
                   )
                 ],
               ),
