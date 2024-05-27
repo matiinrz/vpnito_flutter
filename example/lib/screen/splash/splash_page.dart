@@ -29,46 +29,58 @@ class SplashPage extends GetView<SplashController> {
                     child: Image.asset(
                       'assets/background.png',
                       fit: BoxFit.contain,
-
                     ))),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-              child: Column(
-                children: [
-                  SizedBox(height: Get.height * 0.2),
-                  Container(
-                    height: 200,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("./assets/logo.png")
-                      )
-                    ),
-                  ),
-                  SizedBox(height: Get.height * 0.15),
-                  Center(
-                    child: Text(
-                      "Version 1.0.0",
-                      style: TextStyle(
-                        fontSize: 16.0
+              child: Obx(
+                () {
+                  return Column(
+                    children: [
+                      SizedBox(height: Get.height * 0.2),
+                      Container(
+                        height: 200,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage("./assets/logo.png"))),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  Container(
-                    width: Get.width * 0.5,
-                    height: Get.height * 0.07,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: AppColors.primaryColor,
-                    ),
-                    child: InkWell(
-                      onTap: (){
-                        Get.off(HomePage());
-                      },
-                        child: Center(child: Text("Get Start !",style: AppTheme.theme.textTheme.titleMedium?.copyWith(color: Colors.white)))),
-                  )
-                ],
+                      SizedBox(height: Get.height * 0.15),
+                      Center(
+                        child: Text(
+                          "Version 1.0.0",
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                      ),
+                      Expanded(
+                          child: SizedBox(
+                        height: 30,
+                      )),
+                      controller.showBtn.value
+                          ? AnimatedContainer(
+                              curve: Curves.easeInCubic,
+                              duration: Duration(seconds: 2),
+                              width: Get.width * 0.8,
+                              height: Get.height * 0.07,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: AppColors.primaryColor,
+                              ),
+                              child: InkWell(
+                                  onTap: () {
+                                    Get.off(HomePage());
+                                  },
+                                  child: Center(
+                                      child: Text("Get Start !",
+                                          style: AppTheme
+                                              .theme.textTheme.titleMedium
+                                              ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 18.0)))),
+                            )
+                          : Container()
+                    ],
+                  );
+                },
               ),
             ),
           ],
